@@ -7,10 +7,10 @@ Usage:
  Konverta [options]
 
 Options:
- -v, --version                                                           : Version of Konverta
- -h, --help                                                              : Getting Help
- -c, --convert --fromto [currency_from e.g. USD] [currency_to e.g EUR]   : Convert amount from a currency to another
- -s, --symbols                                                           : List all available currency symbols
+ -v, --version                                                                           : Version of Konverta
+ -h, --help                                                                              : Getting Help
+ -c, --convert --fromto [currency_from e.g. USD] [currency_to e.g EUR] [amount e.g 200]  : Convert amount from a currency to another
+ -s, --symbols                                                                           : List all available currency symbols
 
 Konverta created and developed by nbebaw: https://github.com/nbebaw
 ```
