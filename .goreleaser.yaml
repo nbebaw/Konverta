@@ -1,0 +1,36 @@
+version: 2
+project_name: konverta
+gitlab_urls:
+  api: https://gitlab.adito.de/api/v4
+  download: https://gitlab.adito.de
+
+before:
+  hooks:
+  - go mod tidy
+
+builds:
+  - id: konverta
+    main: ./main.go
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -a
+    ldflags:
+      - -X main.version={{ printf "%.8s" .Commit }}
+    binary: konverta-{{ .Arch }}-v{{ .Version }}
+
+archives:
+  - format: tar.gz
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}

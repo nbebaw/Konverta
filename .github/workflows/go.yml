@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GO_VERSION: '1.22'
+      VERSION: ${{ github.sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for git-changelog
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Install GoReleaser
+        run: |
+          curl -sL https://git.io/goreleaser | bash
+
+      - name: Run GoReleaser
+        run: |
+          goreleaser release --clean
