@@ -3,29 +3,28 @@ name: Release
 on:
   push:
     tags:
-      - '*'
+      - '*'  # Trigger the workflow on any tag push
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    container:
+      image: goreleaser/goreleaser
+      options: --entrypoint ""  # Equivalent to entrypoint: [""] in GitLab CI
+
     env:
       GO_VERSION: '1.22'
       VERSION: ${{ github.sha }}
+      GIT_DEPTH: 0
+      # Use a secret stored in GitHub Actions secrets
+      GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch all history for git-changelog
+          fetch-depth: 0  # Equivalent to GIT_DEPTH: 0 in GitLab CI
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Install GoReleaser
-        run: |
-          curl -sL https://git.io/goreleaser | bash
-
+      # Since the goreleaser/goreleaser image already includes Go, no need to set it up
       - name: Run GoReleaser
-        run: |
-          goreleaser release --clean
+        run: goreleaser release --clean
